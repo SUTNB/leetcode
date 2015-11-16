@@ -1,0 +1,42 @@
+Longest Substring Without Repeating Characters
+题意
+给定一个字符串,找到最长的无重复字符的子串.
+题解
+1.设置两个指针标识子串的头(star)和尾(end),维护一个当前的子串(a).
+2.当end向后移动一位时,判断新的字符串是否在a中.
+3.如果不在a字符串则新加入一个字符,计算长度,如果超过最长当前最长字符,则覆盖它,再循环执行第2步.
+4.如果新的字符存在于a子串中,则找到该字符的位置,将star移至改字符的后一位字符处.更新字符串a,再循环执行第2步.
+使用map 记录字符和它的位置.时间复杂度为O(n)
+代码
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int star = 0, end = 0, length, longest=0;
+        char ch;
+        map <char, int> m;
+        map <char, int>::iterator m_it, it;
+        for(int i = 0;i<s.size();i++)
+        {
+            ch = s[i];
+            m_it = m.find(ch);
+            if(m_it != m.end())
+            {
+                for(int k = star;k<m_it->second+1;k++)
+                {
+                	it = m.find(s[k]);
+                	if(it != m.end())
+                	{
+                   		m.erase(it);
+                	}
+                }
+                star = m_it->second+1;//"abcabcbb"
+            }
+            m.insert ( pair <char, int>  (ch, i) );
+            end = i;
+            length = end - star + 1;
+            if(length > longest)
+                longest = length;
+        }
+        return longest;
+    }
+};

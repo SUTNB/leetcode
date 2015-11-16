@@ -1,0 +1,39 @@
+Median of Two Sorted Arrays
+题意
+有两个有序数组,长度为m和n,找出这m+n个数的中位数,时间复杂度为O(log(n+m)).
+题解
+由时间复杂度分析可知,应使用二分查找的思路(从一个有序的数组中找一个数最快为O(log(n)).)
+从这m+n个数中找到中位数,也可以理解为,找到这m+n(k=m+n/2,k表示需要排除掉的数)个数中第k小的数.(先不考虑m+n时奇数还是偶数)
+取m数组中k/2的位置的数和n数组中k/2的位置的数比较,如果m[k/2-1]>n[k/2-1],则n数组前k/2个数都小于那个要找的中位数,则可以排除n数组前k/2个数.
+反证法:
+如果m[k/2-1]>n[k/2-1],假设n数组的前k/2个数没有全排除掉,则m数组比中位数小的数的个数大于k/2个,则m[k/2-1]也在需要排除的数中,因为m[k/2-1]>n[k/2-1],则n[k/2-1]
+也需要排除,所以与假设相反,假设不成立.则如果m[k/2-1]>n[k/2-1],n数组前k/2个数都小于那个要找的中位数,则可以排除n数组前k/2个数.成立.
+当m数组的个数小于k/2个数时,中位数在n的第k/2-m的位置.
+m+n为奇数时中位数是k/2+1,为偶数时,为k/2,和k/2+1的两个数的平均数.
+每次排数掉k/2个数,时间复杂度为O(log(k/2)) k = m+n 时间复杂度就为O(log(n+m).
+代码
+int findMedian(int nums1[], int nums2[], int n, int m,int k)
+{
+    if(n > m)
+        return findMedian(nums2, nums1, m, n, k);
+    if(n == 0)
+        return nums2[k-1];
+    if(k == 1)
+        return nums1[0]<nums2[0]?nums1[0]:nums2[0];
+    int p1 = k/2 < n ? k/2 : n, p2 = k - p1;
+    if(nums1[p1-1] > nums2[p2-1])
+        return findMedian(nums1, nums2+p2, n, m-p2, k-p2);
+    else if(nums1[p1-1] < nums2[p2-1])
+        return findMedian(nums1+p1,nums2, n-p1, m, k-p1);
+    else
+        return nums1[p1-1];
+}
+double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Size) {
+    int k = nums1Size + nums2Size;
+    if(k%2)
+        return findMedian(nums1, nums2, nums1Size, nums2Size, k/2+1);
+    else
+        return (findMedian(nums1, nums2, nums1Size, nums2Size, k/2)+findMedian(nums1, nums2, nums1Size, nums2Size, k/2+1))/2.0;
+}
+
+

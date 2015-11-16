@@ -1,0 +1,41 @@
+Two Sum
+题意
+给定一个数组numbers和一个数target,从这个数组中找到两个数相加为target,返回这两个数的索引.假定一定存在.
+题解
+枚举每一种可能,然后二分查找,时间复杂度为O(log(n)).
+先把数组排序.
+设置两个指针,一个指向数组头(star),另一个指向数组尾(end),两个指针从往中间移动.
+如果star+end > target 则end指针向中间移动.(因为数组已经有序,当star+end>target时,star向中间移动会使star+end更大,所以end向中间移动使star+end变小,相当于排数掉*end和其他数组合的情况)
+如果star+end < target 则star指针向中间移动.
+代码
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        map<int, int> ma, mp;
+        int i=1;
+        vector<int> v;
+        for(vector<int>::iterator it=nums.begin() ; it!=nums.end() ; it++)
+        {
+            ma[*it]++;
+            if( ma[target-(*it)] )
+            {
+                if(*it!=target-*it)
+                {
+                    v.push_back( mp[ target-(*it) ] );
+                    v.push_back(i);
+                    break;
+                }
+                else if(ma[*it]>=2)
+                {
+                 v.push_back( mp[ target-(*it) ] );
+                 v.push_back(i);
+                 break;
+                }
+            }
+            mp[*it]=i;
+            i++;
+        }
+        return v;
+    }
+};
+

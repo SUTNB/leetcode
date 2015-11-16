@@ -1,0 +1,81 @@
+Add Two Numbers
+
+题意
+
+给你非负的两个链表,数字以反向顺序存储,每个节点包含一个数字,把两个数字想加,作为一个链表节点.
+
+题解
+
+相当于模拟加法,每位不超过9,注意进位,最后一位进位时要新建一个节点.
+
+代码
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* test1 = l1;
+        ListNode* test2 = l2;
+        ListNode* node;
+        for(int i=0, j=0;(test1->next != NULL) || (test2->next != NULL);)
+        {
+            if(test1->next != NULL)
+            {
+                i++;
+                test1 = test1->next;
+            }
+            if(test2->next != NULL)
+            {
+                j++;
+                test2 = test2->next;
+            }
+            if(j>i)
+            {
+                node = l1;
+                l1 = l2;
+                l2 = node;
+                break;
+            }
+        }
+        int carry_new = 0, carry_old = 0, k = 1;
+        ListNode* headNode = l1;
+        ListNode* pendNode = l1;
+        while(l1 != NULL)
+        {
+            k = 0;
+            if(l1->val + (l2 == NULL ? 0 : l2->val) + carry_old > 9)
+            {
+                carry_new = (l1->val + (l2 == NULL ? 0 : l2->val) + carry_old) / 10;
+                l1->val = (l1->val + (l2 == NULL ? 0 : l2->val) + carry_old) % 10;
+            }
+            else
+            {
+                carry_new = 0;
+                l1->val = l1->val + (l2 == NULL ? 0 : l2->val) + carry_old;
+            }
+            carry_old = carry_new;
+            if(l1->next == NULL)
+                pendNode = l1;
+            l1 = l1->next;
+            if(l2 != NULL)
+                l2 = l2->next;
+        }
+        if(k)
+        {
+            carry_old = (l1->val + l2->val) / 10;
+            l1->val = (l1->val + l2->val) % 10;
+        }
+        if(carry_old){
+                ListNode* Node = new ListNode(carry_old);
+                pendNode->next = Node;
+        }
+        return headNode;
+    }
+};
+
