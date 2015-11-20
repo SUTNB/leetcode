@@ -1,0 +1,38 @@
+Reverse Integer
+
+题意
+翻转一个int型数.
+如123=>321,-456=>654
+
+题解
+x除以10取余,result乘以10加到result上.
+注意:翻转后越界问题.当越界是result要返回0;
+const int max = 0x7fffffff;  //int最大值  
+const int min = 0x80000000;  //int最小值 
+代码
+class Solution {
+
+public:
+    int reverse(int x) {
+        long long result = 0;
+        int k=0, n;
+        const int max = 0x7fffffff;  //int最大值  
+        const int min = 0x80000000;  //int最小值 
+        if(x<0)
+        {
+            x = -x;
+            k = 1;
+        }
+        while(x)
+        {
+            n = x % 10;
+            result = result*10 + n;
+            if (result > max || result < min)   //溢出处理  
+                return 0;
+            x = x / 10;
+        }
+        if(k)
+            result = -result;
+        return result;
+    }
+};
