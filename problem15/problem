@@ -1,0 +1,77 @@
+3Sum
+题意
+给定一个数组，找出三个数，相减为0，不得重复。
+题解
+先排序，然后从头和尾分别扫，外侧最大一层循环，套里层循环，大于零尾置针向左移动，小于零向头指针向右移动。找出所有符合情况。
+注意：排除重复的组合。首先分析重复出现的情况，由于某个数有重复的情况，才导致不同组合的出现。然而一样的数字时紧挨着的，所以只需要判断指针移动后数字是否和原来一样，若一样，则继续移动，直到不一样为止。
+代码
+class Solution {
+
+    public:
+
+    vector<vector<int>> threeSum(vector<int>& nums) {
+
+            sort(nums.begin(), nums.end());
+
+            vector< vector<int> > result;
+
+            vector<int> a;
+
+        for(int i=0;i<nums.size();i++){
+
+                    while(i > 0 && i < nums.size() && nums[i] == nums[i-1])
+
+                        i ++;
+
+            for(int j=i+1,k=nums.size()-1;j<nums.size()-1;){
+                
+                            if(j>=k) break;
+
+                if(nums[i]+nums[j]+nums[k] < 0){
+
+                                    j++;
+
+                                
+                }else if(nums[i]+nums[j]+nums[k] > 0)
+
+                {
+                    
+                                    k--;
+
+                                
+                }else{
+
+                                    a.clear();
+
+                                    a.push_back(nums[i]);
+
+                                    a.push_back(nums[j]);
+
+                                    a.push_back(nums[k]);
+
+                                    result.push_back(a);
+
+                                    j++;
+
+                                    k--;
+
+                                    while(k > j && nums[k] == nums[k+1])
+
+                                            k --;
+
+                                
+                }
+
+                        
+            }
+
+                
+        }
+
+    return result;
+
+    
+    }
+
+
+};
