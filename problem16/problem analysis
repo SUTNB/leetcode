@@ -1,0 +1,45 @@
+3Sum Closest
+题意
+给一个数组和一个目标数字，找出三个数字相加的和最接近该目标数字的组合的和。
+题解
+类似problem15，只需在判断过程中和目标数字比较大小，声明一个数字来记录最小值，不断更新，找出最接近的数字组合的和。
+代码
+/*************************************************************************
+	> File Name: problem16.cpp
+	> Author: 
+	> Mail: 
+	> Created Time: 2016年02月20日 星期六 19时30分25秒
+ ************************************************************************/
+#include<stdio.h>
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+int threeSumClosest(vector<int> nums, int target){
+    sort(nums.begin(), nums.end());
+    int small=nums[0]+nums[1]+nums[nums.size()-1], now;
+    for(int i = 0; i < nums.size()-2;i++){
+        for(int j = i+1, k = nums.size() -1;;){
+            if(k == j) break;
+            now = nums[i]+nums[j]+nums[k];
+            if(now < target){
+                j++;
+                if(target - now < abs(small-target) )
+                    small = now;
+            }else if(now > target){
+                k--;
+                if(now - target < abs(small-target))
+                    small = now;
+            }else{
+                return 0;
+            }
+        }
+    }
+    return small;
+}
+int main(){
+    int a[4] = {-1, 2, 1, -4};
+    vector<int> nums(a, a+4);
+    cout<<threeSumClosest(nums, 1)<<endl;
+    return 0;
+}
